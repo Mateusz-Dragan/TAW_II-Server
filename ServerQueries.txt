@@ -1,0 +1,19 @@
+INSERT INTO Tests (test_name, category, points) VALUES('Test', 'Test', 54)
+DELETE FROM Tests WHERE id = 1
+
+
+
+{
+    "test_id": 1,
+    "question": "How old are you",
+    "correct_answer": 2,
+    "answers": ["2", "15", "22"]
+}
+
+
+
+{
+    "test_id": 56,
+    "user_id": 1,
+    "user_answers": [1,3,5]
+}
