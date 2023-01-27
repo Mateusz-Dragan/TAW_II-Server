@@ -1,11 +1,11 @@
-import models from "../models/index.js";
+const models = require("../models/index.js").models;
 
 const Test = models.Test
 const TestAnswers = models.TestAnswers
 const TestQuestions = models.TestQuestions
 const TestResults = models.TestResults
 
-export default class TestAnswersController {
+module.exports = class TestAnswersController {
 
     create = async (req, res) => {
         if(await Test.findOne({where:{id:req.body.test_id}}))
@@ -16,8 +16,6 @@ export default class TestAnswersController {
                         where: {id: req.body.test_id}, raw: true})
                     const testQuestions = await TestQuestions.findAll({ attributes:["correct_answer"],
                         where: {test_id: req.body.test_id}, raw: true})
-
-                    console.log(testQuestions)
                     let points = 0
 
                     for(let i = 0; i< testQuestions.length; i++){
@@ -28,7 +26,7 @@ export default class TestAnswersController {
 
                     await TestResults.create({test_id: req.body.test_id, user_id: req.body.user_id, points: points, max_points: test.points})
 
-                    res.send(data);
+                    res.status(201).send(data);
                 })
                 .catch(err => {
                     res.status(500).send({

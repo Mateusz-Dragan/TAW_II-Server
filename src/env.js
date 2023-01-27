@@ -12,5 +12,5 @@ const env = {
         idle: 10000
     }
 }
-export default env
+module.exports = env
 

@@ -1,21 +1,22 @@
 const models = require("../models/index.js").models;
 
-const Test = models.Test
-const TestQuestions = models.TestQuestions
+const Course = models.Course
+const CourseMaterials = models.CourseMaterials
 
-module.exports = class TestController {
-
+module.exports = class CourseController{
     create = async (req, res) => {
-        if (req.body.test_name) {
-            if (await Test.checkIfTestNameExists(req.body.test_name)) {
-                res.status(409).send({ message: 'Test of this name already exists' })
+        if (req.body.course_name) {
+            if (await Course.checkIfCourseNameExists(req.body.course_name)) {
+                res.status(409).send({ message: 'Course of this name already exists' })
                 return
             }
         }
 
-        Test.create(req.body)
+        Course.create(req.body)
             .then(data => {
-                res.status(201).send(data);
+                res.status(201).send(
+                    data
+                );
             })
             .catch(err => {
                 res.status(400).send({
@@ -26,32 +27,30 @@ module.exports = class TestController {
 
     findOne = (req, res) => {
         const id = req.params.id;
-        Test.findByPk(id).then(data => {
+        Course.findByPk(id).then(data => {
             if (data) {
                 res.status(200).send(data);
-                return
             } else {
                 res.status(404).send({
-                    message: `Cannot find Test with given id.`
+                    message: `Cannot find Course with given id.`
                 });
-                return
             }
         })
             .catch(err => {
                 res.status(500).send({
-                    message: "Error retrieving Test with given id"
+                    message: "Error retrieving Course with id=" + id
                 });
             });
     }
 
     findAll = (req, res) => {
-        Test.findAll()
+        Course.findAll()
             .then(data => {
                 res.send(data);
             })
             .catch(err => {
                 res.status(500).send({
-                    message: "Some error occurred while retrieving the Tests."
+                    message: "Some error occurred while retrieving the Course."
                 });
             });
     };
@@ -59,52 +58,51 @@ module.exports = class TestController {
     delete = (req, res) => {
         const id = req.params.id;
 
-        Test.destroy({
+        Course.destroy({
             where: { id: id }
         })
             .then(num => {
                 if (num == 1) {
-                    TestQuestions.destroy({
-                        where: { test_id: id }
+                    CourseMaterials.destroy({
+                        where:{course_id:id}
                     })
                     res.send({
-                        message: "Test was deleted successfully!"
+                        message: "Course was deleted successfully!"
                     });
                 } else {
                     res.status(404).send({
-                        message: `Cannot delete Test with id=${id}. Test was not found!`
+                        message: `Cannot delete Course with id=${id}. Course was not found!`
                     });
                 }
             })
             .catch(err => {
                 res.status(500).send({
-                    message: "Could not delete Test with id=" + id
+                    message: "Could not delete Course with id=" + id
                 });
             });
     };
 
     update = async (req, res) => {
         const id = req.params.id;
-        const FindTestById = await Test.findOne({
+        const FindCourseById = await Course.findOne({
             where: {
                 id: id
             }
         })
-        if (!FindTestById) {
+        if (!FindCourseById) {
             res.status(400).send({
-                message: "Could not find test of given id"
+                message: "Could not find course of given id"
             })
             return
         }
-        await Test.update({
-            test_name: req.body.test_name,
-            category: req.body.category,
-            points: req.body.points
-        }, { where: { id: id } }).then(async data => {
-            await TestQuestions.destroy({
-                where: { test_id: id }
+        await Course.update({
+            course_name: req.body.course_name,
+            category: req.body.category
+        },{where:{id:id}}).then(async data => {
+            await CourseMaterials.destroy({
+                where:{course_id:id}
             })
-            res.send({ message: 'Test updated successfully' })
+            res.send({message:'Course updated successfully'})
         }).catch(err => {
             res.status(500).send({
                 message: "Something went wrong"

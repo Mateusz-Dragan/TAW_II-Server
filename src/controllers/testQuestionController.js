@@ -1,18 +1,19 @@
-import models from "../models/index.js";
+const models = require("../models/index.js").models;
 
 const TestQuestions = models.TestQuestions
 
-export default class TestQuestionsController {
+module.exports = class TestQuestionsController {
 
     create = async (req, res) => {
         TestQuestions.create(req.body)
             .then(data => {
-                res.send(data);
+                res.status(201).send({
+                    message: "Question added successfully"
+                });
             })
             .catch(err => {
                 res.status(500).send({
-                    message:
-                        err.message || "Some error occurred while adding the Test."
+                    message: "Some error occurred while adding the Question."
                 });
             });
     }
@@ -23,12 +24,11 @@ export default class TestQuestionsController {
             where:{test_id: id}
         })
             .then(data => {
-                res.send(data);
+                res.status(200).send(data);
             })
             .catch(err => {
                 res.status(500).send({
-                    message:
-                        err.message || "Some error occurred while retrieving the Questions."
+                    message: "Some error occurred while retrieving the Questions."
                 });
             });
     };

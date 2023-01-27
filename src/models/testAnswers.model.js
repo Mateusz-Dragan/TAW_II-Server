@@ -1,4 +1,4 @@
-import {ARRAY} from "sequelize";
+const ARRAY = require("sequelize").ARRAY;
 
 const getTestAnswersModel = (sequelize, Sequelize) => {
     const TestAnswers = sequelize.define('Test_Answers', {
@@ -23,4 +23,4 @@ const getTestAnswersModel = (sequelize, Sequelize) => {
     });
     return TestAnswers
 }
-export default getTestAnswersModel
+module.exports = getTestAnswersModel

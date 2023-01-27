@@ -27,4 +27,4 @@ const getTestModel = (sequelize, Sequelize) => {
     }
     return Test
 }
-export default getTestModel
+module.exports = getTestModel

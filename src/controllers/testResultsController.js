@@ -1,32 +1,13 @@
-import models from "../models/index.js";
+const models = require("../models/index.js").models;
 
 const TestResults = models.TestResults
 
-export default class TestResultsController {
-
-    create = async (req, res) => {
-        // if(await Test.findOne({where:{id:req.body.test_id}}))
-        // {
-        //     TestAnswers.create(req.body)
-        //         .then(data => {
-        //
-        //             res.send(data);
-        //         })
-        //         .catch(err => {
-        //             res.status(500).send({
-        //                 message:
-        //                     err.message || "Some error occurred while adding the answers to the test."
-        //             });
-        //         });
-        // }
-        // else{
-        //     res.send('Cannot send answers to a test that does not exist')
-        // }
-    }
+module.exports = class TestResultsController {
 
     findLast = (req, res) =>{
-        const id = req.params.id;
-        TestResults.findOne({where:{test_id: id},order: [ [ 'createdAt', 'DESC' ]],}).then(
+        const testId = req.params.testId;
+        const userId = req.params.userId;
+        TestResults.findOne({where:{test_id: testId, user_id: userId},order: [ [ 'createdAt', 'DESC' ]],}).then(
             data=>{
                 res.send(data)
             }
